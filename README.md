@@ -1,11 +1,12 @@
 # This script for auto generated documentation.
-It works with **relative** and **absolute** paths,
-and can work with several documents. Every class
-with its methods,  every stand-alone functions
-will be in the report with theirs docstring.
+It works with **relative** and **absolute** paths, and can work with several documents. 
+
+Every class with its methods, every stand-alone functions will be in the report with theirs docstring. 
+
 If there is no docstring the result will be None.
-This report(filename_doc.txt) saves in same directory
-that filename1.py.
+
+This report(filename_doc.txt) saves in same directory that filename1.py.
+
 How to run:
 #### 1) Runs with **relative** paths 
 ```bash
