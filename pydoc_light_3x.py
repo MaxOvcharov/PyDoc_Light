@@ -10,16 +10,17 @@
     This report(filename_doc.txt) saves in same directory
     that filename1.py.
     How to run:
-    python ~/pydoc_light.py  1)~/filename1.py ~/filename2.py
+    python ~/pydoc_light_3x.py  1)~/filename1.py ~/filename2.py
                                     OR
                               2)/usr/bin/filename1.py /usr/bin/filename2.py
                                     OR
                               3)~/filename1.py /usr/bin/filename2.py
 """
 __author__ = 'om'
+import imp
 import sys
 import types
-import imp
+
 from os import path
 
 
@@ -43,42 +44,42 @@ def main(path_to_file, num_import):
     file_name = path.split(path_to_file)[1].split(".")[0]
     # Takes pathname without 'filename.py'
     path_name = path.split(path.abspath(path_to_file))[0]
-    with open(path.join(path_name, "{0}_doc.txt".format(file_name)), 'w') as g:
+    with open(path.join(path_name, "{0}_doc.txt".format(file_name)), 'w') as f:
         for doc_class in dir(file_import):
             if not doc_class.startswith("__"):
-                if types.ClassType == type(getattr(file_import, doc_class)):
+                # if isinstance(type(getattr(file_import, doc_class)), types.ClassType):
+                if issubclass(type(getattr(file_import, doc_class)), object):
                     # Print class name and its docstring
-                    g.write("\n{0}) Имя класса: {1}\n".format(count_class_and_function, doc_class))
+                    f.write("\n{0}) Имя класса: {1}\n".format(count_class_and_function, doc_class))
                     docstring = str(getattr(file_import, doc_class).__doc__).strip().split("\n")
                     for line in docstring:
-                        g.write(line.strip() + "\n")
+                        f.write(line.strip() + "\n")
                     # Print method name and its docstring
                     for doc_method in dir(getattr(file_import, doc_class)):
                         if not doc_method.startswith("__"):
-                            g.write("\n{0}.{1}) Имя метода: {2}\n".format(count_class_and_function,
-                                                                         count_method,
-                                                                         doc_method))
+                            frm = "\n{0}.{1}) Имя метода: {2}\n"
+                            f.write(frm.format(count_class_and_function, count_method, doc_method))
                             count_method += 1
                             docstring = str(getattr(getattr
                                                     (file_import, doc_class),
                                                     doc_method).__doc__).strip().split("\n")
                             for line in docstring:
-                                g.write(line.strip() + "\n")
-                    g.write("\n" + "|***|***" * 10 + "\n")
+                                f.write(line.strip() + "\n")
+                    f.write("\n" + "|***|***" * 10 + "\n")
                     count_class_and_function += 1
                     count_method = 1
                 # Print function name and its docstring
-                if types.FunctionType == type(getattr(file_import, doc_class)):
-                    g.write("\n{0}) Имя функции: {1}\n".format(count_class_and_function, doc_class))
+                if isinstance(type(getattr(file_import, doc_class)), types.FunctionType):
+                    f.write("\n{0}) Имя функции: {1}\n".format(count_class_and_function, doc_class))
                     count_class_and_function += 1
                     docstring = str(getattr(file_import, doc_class).__doc__).strip().split("\n")
                     for line in docstring:
-                        g.write(line.strip() + "\n")
-                    g.write("\n" + "|***|***" * 10 + "\n")
+                        f.write(line.strip() + "\n")
+                    f.write("\n" + "|***|***" * 10 + "\n")
 
 
 if __name__ == "__main__":
     list_argv = sys.argv
     if len(list_argv) > 1:
-        for i in xrange(1, len(list_argv)):
+        for i in range(1, len(list_argv)):
             main(list_argv[i], i)
